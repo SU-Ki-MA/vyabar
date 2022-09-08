@@ -1,13 +1,15 @@
-import { Group, Text, Burger, Header, createStyles, MediaQuery, useMantineTheme, Box, Button, ActionIcon, useMantineColorScheme } from '@mantine/core';
+import { Group, Text, Burger, Header, createStyles, MediaQuery, useMantineTheme, Box, Button, ActionIcon, useMantineColorScheme,ThemeIconVariant,ButtonVariant } from '@mantine/core';
+import {useState} from 'react';
 import { IconBrandVimeo, IconCaretRight, IconSearch, IconArrowRight, IconSettings, IconSun, IconMoonStars } from '@tabler/icons'
 import { InputWithButton } from './InputWithButton';
+import React from 'react';
 
 const useStyles = createStyles((theme) => ({
   header: {
     paddingTop: 0,
-    backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[6] : theme.white,
+    backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[6] : theme.colors.gray[2],
     color: theme.colorScheme === 'dark' ? theme.white : theme.black,
-    borderBottom: `1px solid ${theme.colorScheme === 'dark' ? theme.colors.dark[4] : theme.colors.gray[3]
+    borderBottom: `1px solid ${theme.colorScheme === 'dark' ? theme.colors.dark[4] : theme.colors.gray[4]
       }`,
   },
   parentGroupLG: {
@@ -38,8 +40,12 @@ interface headProp {
 
 export function AppHeader({ op, setOp }: headProp) {
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
+  const icon_variant:ThemeIconVariant="light"
+  const button_variant:ButtonVariant="light"
   const theme = useMantineTheme();
   const { classes } = useStyles()
+  const [value, setValue] = useState('');
+  const data =value.trim().length > 0 && !value.includes('@') ? ['sukima.moe','gmail.com', 'outlook.com', 'yahoo.com'].map((provider) => `${value}@${provider}`) : [];
   return (
     <Header height={60}>
       <div style={{ height: '100%' }}>
@@ -47,33 +53,33 @@ export function AppHeader({ op, setOp }: headProp) {
 
           <MediaQuery smallerThan={'lg'} styles={{ width: '100%' }}>
             <Group position="apart" className={classes.childGroupLG} >
-              <IconBrandVimeo size={20} style={{ margin: '1rem' }} />
-              <Text sx={{ fontWeight: 600 }}>Firm name</Text>
-              <MediaQuery largerThan="lg" styles={{ display: 'none' }}>
+              <IconBrandVimeo size={20} style={{ margin: '1rem',color:theme.colorScheme === 'dark' ? theme.colors.dark[0] : theme.black }} />
+              <Text sx={{ fontWeight: 600, color:theme.colorScheme === 'dark' ? theme.colors.dark[0] : theme.black }}>Firm name</Text>
+              <MediaQuery largerThan="lg" styles={{ display: 'none'}}>
                 <Burger
                   opened={op}
                   onClick={() => setOp((o) => !o)}
                   size="sm"
-                  color={theme.colors.gray[6]}
+                  color={theme.colorScheme === 'dark' ? theme.colors.dark[0] : theme.black }
                   mr="xl"
                 />
               </MediaQuery>
               <MediaQuery smallerThan="lg" styles={{ display: 'none' }}>
-                <IconCaretRight size={20} style={{ margin: '1rem' }} />
+                <IconCaretRight size={20} style={{ margin: '1rem',color:theme.colorScheme === 'dark' ? theme.colors.dark[0] : theme.black  }} />
               </MediaQuery>
             </Group>
           </MediaQuery>
 
           <MediaQuery smallerThan={'lg'} styles={{ display: 'none' }} >
             <Group position='apart' sx={{ flexGrow: 1 }}>
-              <InputWithButton />
+              <InputWithButton data={data} value={value} onChange={setValue}/>
               <Group spacing={'md'} position={'right'} sx={{ flexGrow: 1 }}>
-                <Button variant='light'>Add Sale</Button>
-                <Button variant='light'>Add Purchase</Button>
-                <ActionIcon size={32} radius="md" color={theme.primaryColor} variant="light" sx={{}}>
+                <Button variant={button_variant}>Add Sale</Button>
+                <Button variant={button_variant}>Add Purchase</Button>
+                <ActionIcon size={32} radius="md" color={theme.primaryColor} variant={icon_variant} sx={{}}>
                   <IconSettings size={18} />
                 </ActionIcon>
-                <ActionIcon size={32} radius="md" color={theme.primaryColor} onClick={() => toggleColorScheme()} variant="light" sx={{ margin: '0.5rem', marginRight: '2rem' }}>
+                <ActionIcon size={32} radius="md" color={theme.primaryColor} onClick={() => toggleColorScheme()} variant={icon_variant} sx={{ margin: '0.5rem', marginRight: '2rem' }}>
                   {colorScheme === 'dark' ? <IconSun size={18} /> : <IconMoonStars size={18} />}
                 </ActionIcon>
               </Group>
